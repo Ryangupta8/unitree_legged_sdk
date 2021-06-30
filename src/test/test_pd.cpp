@@ -47,7 +47,7 @@ public:
 
 
 void Custom::InitializePnC() {
-    interface_ = new A1Interface();
+    // interface_ = new A1Interface();
     sensordata_ = new A1SensorData();
     command_ = new A1Command();
     kp_ = Eigen::VectorXd::Zero(12);
@@ -126,7 +126,7 @@ void Custom::RobotControl() {
         // TODO: Add some method to determine foot contact
 
     // Call A1 Interface getCommand
-    interface_->getCommand(sensordata_, command_);
+    // interface_->getCommand(sensordata_, command_);
 
     // Set lowCmd q, dq values
         // Set q des
