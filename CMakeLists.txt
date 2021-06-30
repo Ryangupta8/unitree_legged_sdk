@@ -3,6 +3,8 @@ project(unitree_legged_sdk)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
+#add_subdirectory(src)
+
 ## Ryan Added 
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
@@ -17,6 +19,7 @@ find_package(PnC REQUIRED)
 ## End Ryan Added.
 
 include_directories(include)
+include_directories(include/unitree_legged_sdk/vectornav)
 
 link_directories(lib)
 
@@ -37,6 +40,13 @@ set(CMAKE_CXX_FLAGS "-O3")
 
 add_executable(test_pd src/test/test_pd.cpp)
 target_link_libraries(test_pd ${EXTRA_LIBS} ${PNC_LIBRARIES} ${RYAN_TEST_LIBRARY})
+
+add_executable(test_footforce src/test/test_footforce.cpp)
+target_link_libraries(test_footforce ${EXTRA_LIBS} ${PNC_LIBRARIES} ${RYAN_TEST_LIBRARY})
+
+add_executable(test_vnav src/test/test_vnav.cpp src/vectornav/vectornav.cpp)
+target_link_libraries(test_vnav ${EXTRA_LIBS} ${PNC_LIBRARIES} ${RYAN_TEST_LIBRARY})
+
 ## End Ryan exe
 
 

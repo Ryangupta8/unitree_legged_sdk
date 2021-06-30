@@ -1,6 +1,6 @@
 #include <unitree_legged_sdk/vectornav/vectornav.hpp>
 
-
+using namespace std;
 Vectornav::Vectornav() {
 
   ///////////////////////////////////////////////////////////////////////////
@@ -8,10 +8,10 @@ Vectornav::Vectornav() {
   /// Initialize Data Members to 0                                        ///
   //////////////////////////////////////////////////////////////////////////
 
-  raRPY = Eigen::VectorXd::Zero(3);
+  /*raRPY = Eigen::VectorXd::Zero(3);
   raMag = Eigen::VectorXd::Zero(3);
   raAcc = Eigen::VectorXd::Zero(3);
-  raGyro = Eigen::VectorXd::Zero(3);
+  raGyro = Eigen::VectorXd::Zero(3);*/
 
   ///////////////////////////////////////////////////////////////////////////
   ///                                                                     ///
@@ -39,7 +39,7 @@ Vectornav::Vectornav() {
   // Control Modes
   tty.c_cflag &= ~PARENB; // Clear parity bit, disabling parity (most common)
   tty.c_cflag &= ~CSTOPB; // Clear stop field, only one stop bit used in communication
-  tty.c_cflag &= ~CSIZE // Clear all the size bits, then use one of the statements below
+  tty.c_cflag &= ~CSIZE; // Clear all the size bits, then use one of the statements below
   tty.c_cflag |= CS8; // 8 bits per byte (most common)
   tty.c_cflag &= ~CRTSCTS; // Disable RTS/CTS hardware flow control (most common)
   tty.c_cflag |= CREAD | CLOCAL; // Turn on READ & ignore ctrl lines (CLOCAL = 1)
@@ -76,6 +76,119 @@ Vectornav::Vectornav() {
   if (tcsetattr(serial_port, TCSANOW, &tty) != 0) {
     printf("Error %i from tcsetattr: %s\n", errno, strerror(errno));
   }
+
+}
+
+Vectornav::~Vectornav() {
+  close(serial_port);
+}
+
+int Vectornav::checksum(char chrData [116]) {
+  int sumData = 0;
+  for (int i=0; i<116; ++i) {
+    // std::cout << "chrData[i] = " << chrData[i] << std::endl;
+    sumData ^= chrData[i];
+  }
+  // std::cout << "---------------------------------" << std::endl;
+  return sumData;
+}
+
+
+bool Vectornav::getData() {
+  int valChecksum;
+  int sumData;
+  double raVal[4][3];
+  char *pt;
+
+  void* ptrRead;
+
+  char chrStart;
+  char chrData[116];
+  char chrEnd;
+  char chrChecksum[2];
+
+  std::cout << "getData 0" << std::endl;
+
+  int o = read(serial_port, &chrStart, 1);
+  // memcpy(&ptrData, chrStart, 1);
+
+  std::cout << "getData 1" << std::endl;
+
+  if (chrStart == '$') {
+    std::cout << "getData 1.1" << std::endl;
+    int n = read(serial_port, ptrRead, 116);
+    std::cout << "ptrRead = " << ptrRead << std::endl;
+    std::cout << "getData 1.2" << std::endl;
+    memcpy(chrData, ptrRead, 116);
+    std::cout << "getData 1.3" << std::endl;
+
+    int q = read(serial_port, &chrEnd, 1);
+    std::cout << "getData 1.4" << std::endl;
+  } else {return 0;}
+
+  std::cout << "getData 2" << std::endl;
+
+  if (chrEnd == '*') {
+
+    int r = read(serial_port, ptrRead, 2);
+    std::cout << "getData 3" << std::endl;
+    memcpy(chrChecksum, ptrRead, 2);
+
+    valChecksum = 0;
+
+    if (chrChecksum[0] <= '9')
+        valChecksum += 16 * (chrChecksum[0] - '0');
+    else
+        valChecksum += 16 * (chrChecksum[0] - 'A' + 10);
+
+    if (chrChecksum[1] <= '9')
+        valChecksum +=(chrChecksum[1] - '0');
+    else
+        valChecksum +=(chrChecksum[1] - 'A' + 10);
+
+    sumData = checksum(chrData);
+    valChecksum %= 256;
+  } else {return 0;}
+
+  std::cout << "chrStart = " << chrStart << std::endl;
+  std::cout << "chrEnd = " << chrEnd << std::endl;
+  std::cout << "chrChecksum = " << chrChecksum << std::endl;
+  std::cout << "chrData = " << chrData << std::endl;
+  std::cout << "sumData =  " << sumData << std::endl;
+  std::cout << "valChecksum =  " << valChecksum << std::endl;
+  std::cout << "---------------------------------" << std::endl;
+
+  if (valChecksum == sumData) {
+
+    pt = strtok (chrData, ",");
+    // pt = strtok(NULL,",");
+    for (int i = 0; i < 4; i++) {
+      for (int j = 0; j < 3; j++) {
+        // pt = strtok (chrData,",");
+        std::cout << "pt = " << pt << std::endl;
+        raVal[i][j] = atof(pt); // 
+        pt = strtok (NULL, ",");
+      }
+    }
+  } else {return 0;}
+
+  std::cout << "raVal[0][.] = " << raVal[0][1] << ", " << raVal[0][2] 
+            << ", " <<raVal[0][3] << std::endl;
+  std::cout << "raVal[1][.] = " << raVal[1][1] << ", " << raVal[1][2] 
+            << ", " <<raVal[1][3] << std::endl;
+  std::cout << "raVal[2][.] = " << raVal[2][1] << ", " << raVal[2][2] 
+            << ", " <<raVal[2][3] << std::endl;
+  std::cout << "raVal[3][.] = " << raVal[3][1] << ", " << raVal[3][2] 
+            << ", " <<raVal[3][3] << std::endl;
+
+  return 1;
+
+  /*// Read bytes. The behaviour of read() (e.g. does it block?,
+  // how long does it block for?) depends on the configuration
+  // settings above, specifically VMIN and VTIME
+  int n = read(serial_port, &read_buf, sizeof(read_buf));
+  // n is the number of bytes read. n may be 0 if no bytes 
+  // were received, and can also be negative to signal an error.*/
 
 
 }
