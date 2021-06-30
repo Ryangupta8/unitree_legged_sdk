@@ -20,6 +20,7 @@ find_package(PnC REQUIRED)
 
 include_directories(include)
 include_directories(include/unitree_legged_sdk/vectornav)
+#include_directories(../VN100)
 
 link_directories(lib)
 
@@ -46,6 +47,9 @@ target_link_libraries(test_footforce ${EXTRA_LIBS} ${PNC_LIBRARIES} ${RYAN_TEST_
 
 add_executable(test_vnav src/test/test_vnav.cpp src/vectornav/vectornav.cpp)
 target_link_libraries(test_vnav ${EXTRA_LIBS} ${PNC_LIBRARIES} ${RYAN_TEST_LIBRARY})
+
+add_executable(test_jpos src/test/test_jpos.cpp)
+target_link_libraries(test_jpos ${EXTRA_LIBS} ${PNC_LIBRARIES} ${RYAN_TEST_LIBRARY})
 
 ## End Ryan exe
 
