@@ -4,15 +4,15 @@ class Vectornav;
 
 int main () {
 
+  Vectornav imu;
+  bool b;
   while (true) {
-    Vectornav imu;
-    std::cout << "Object created" << std::endl;
-    imu.getData();
+    b = imu.getData();
 
     /* if (b) {
       std::cout << "hello world" << std::endl;
     }*/ 
 
-    // if(imu.getData()) std::cout << "Mingyo did it" << std::endl;
+    if(imu.getData()) std::cout << "Mingyo did it" << std::endl;
   }
 }

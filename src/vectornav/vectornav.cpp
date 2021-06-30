@@ -8,10 +8,10 @@ Vectornav::Vectornav() {
   /// Initialize Data Members to 0                                        ///
   //////////////////////////////////////////////////////////////////////////
 
-  /*raRPY = Eigen::VectorXd::Zero(3);
+  raRPY = Eigen::VectorXd::Zero(3);
   raMag = Eigen::VectorXd::Zero(3);
   raAcc = Eigen::VectorXd::Zero(3);
-  raGyro = Eigen::VectorXd::Zero(3);*/
+  raGyro = Eigen::VectorXd::Zero(3);
 
   ///////////////////////////////////////////////////////////////////////////
   ///                                                                     ///
@@ -103,36 +103,35 @@ bool Vectornav::getData() {
   void* ptrRead;
 
   char chrStart;
+  char chrData_single;
   char chrData[116];
   char chrEnd;
+  char chrChecksum_single;
   char chrChecksum[2];
 
-  std::cout << "getData 0" << std::endl;
-
   int o = read(serial_port, &chrStart, 1);
-  // memcpy(&ptrData, chrStart, 1);
-
-  std::cout << "getData 1" << std::endl;
 
   if (chrStart == '$') {
-    std::cout << "getData 1.1" << std::endl;
-    int n = read(serial_port, ptrRead, 116);
-    std::cout << "ptrRead = " << ptrRead << std::endl;
-    std::cout << "getData 1.2" << std::endl;
-    memcpy(chrData, ptrRead, 116);
-    std::cout << "getData 1.3" << std::endl;
+    for (int i=0; i<116; ++i) {
+      int n = read(serial_port, &chrData_single, 1);
+      // std::cout << "chrData_single = " << chrData_single << std::endl;
+      chrData[i] = chrData_single;
+    }
+    // int n = read(serial_port, ptrRead, 116);
+    // std::cout << "ptrRead = " << ptrRead << std::endl; 
+    // std::cout << "n ptrRead = " << n << std::endl;
+    // memcpy(chrData, ptrRead, 116);
 
     int q = read(serial_port, &chrEnd, 1);
-    std::cout << "getData 1.4" << std::endl;
   } else {return 0;}
 
-  std::cout << "getData 2" << std::endl;
-
   if (chrEnd == '*') {
-
-    int r = read(serial_port, ptrRead, 2);
-    std::cout << "getData 3" << std::endl;
-    memcpy(chrChecksum, ptrRead, 2);
+    for (int i=0; i<2; ++i) {
+      int r = read(serial_port, &chrChecksum_single, 1);
+      chrChecksum[i] = chrChecksum_single;
+    }
+    // int r = read(serial_port, ptrRead, 2);
+    // memcpy(chrChecksum, ptrRead, 2);
 
     valChecksum = 0;
 
@@ -150,13 +149,13 @@ bool Vectornav::getData() {
     valChecksum %= 256;
   } else {return 0;}
 
-  std::cout << "chrStart = " << chrStart << std::endl;
-  std::cout << "chrEnd = " << chrEnd << std::endl;
-  std::cout << "chrChecksum = " << chrChecksum << std::endl;
-  std::cout << "chrData = " << chrData << std::endl;
-  std::cout << "sumData =  " << sumData << std::endl;
-  std::cout << "valChecksum =  " << valChecksum << std::endl;
-  std::cout << "---------------------------------" << std::endl;
+  // std::cout << "chrStart = " << chrStart << std::endl;
+  // std::cout << "chrEnd = " << chrEnd << std::endl;
+  // std::cout << "chrChecksum = " << chrChecksum << std::endl;
+  // std::cout << "chrData = " << chrData << std::endl;
+  // std::cout << "sumData =  " << sumData << std::endl;
+  // std::cout << "valChecksum =  " << valChecksum << std::endl;
+  // std::cout << "---------------------------------" << std::endl;
 
   if (valChecksum == sumData) {
 
@@ -165,21 +164,28 @@ bool Vectornav::getData() {
     for (int i = 0; i < 4; i++) {
       for (int j = 0; j < 3; j++) {
         // pt = strtok (chrData,",");
-        std::cout << "pt = " << pt << std::endl;
+        // std::cout << "pt = " << pt << std::endl;
         raVal[i][j] = atof(pt); // 
         pt = strtok (NULL, ",");
       }
     }
   } else {return 0;}
 
-  std::cout << "raVal[0][.] = " << raVal[0][1] << ", " << raVal[0][2] 
+  /*std::cout << "raVal[0][.] = " << raVal[0][1] << ", " << raVal[0][2] 
             << ", " <<raVal[0][3] << std::endl;
   std::cout << "raVal[1][.] = " << raVal[1][1] << ", " << raVal[1][2] 
             << ", " <<raVal[1][3] << std::endl;
   std::cout << "raVal[2][.] = " << raVal[2][1] << ", " << raVal[2][2] 
             << ", " <<raVal[2][3] << std::endl;
   std::cout << "raVal[3][.] = " << raVal[3][1] << ", " << raVal[3][2] 
-            << ", " <<raVal[3][3] << std::endl;
+            << ", " <<raVal[3][3] << std::endl;*/
+
+  // Fill our Eigen Vectors
+  raRPY[0] = raVal[0][3]; raRPY[1] = raVal[0][2]; raRPY[2] = raVal[0][1];
+  raMag[0] = raVal[1][1]; raMag[1] = raVal[1][2]; raMag[2] = raVal[1][3];
+  raAcc[0] = raVal[2][1]; raAcc[1] = raVal[2][2]; raAcc[2] = raVal[2][3];
+  raGyro[0] = raVal[3][1]; raGyro[1] = raVal[3][2]; raGyro[2] = raVal[3][3];
+
 
   return 1;
 
