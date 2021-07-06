@@ -51,6 +51,9 @@ target_link_libraries(test_vnav ${EXTRA_LIBS} ${PNC_LIBRARIES} ${RYAN_TEST_LIBRA
 add_executable(test_jpos src/test/test_jpos.cpp)
 target_link_libraries(test_jpos ${EXTRA_LIBS} ${PNC_LIBRARIES} ${RYAN_TEST_LIBRARY})
 
+add_executable(test_lowdriver src/test/test_lowdriver.cpp src/A1LowDriver.cpp src/vectornav/vectornav.cpp)
+target_link_libraries(test_lowdriver ${EXTRA_LIBS} ${PNC_LIBRARIES} ${RYAN_TEST_LIBRARY})
+
 ## End Ryan exe
 
 
