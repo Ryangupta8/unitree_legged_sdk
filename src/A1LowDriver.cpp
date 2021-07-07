@@ -86,9 +86,9 @@ void A1LowDriver::extract_sensor_data() {
   sensordata_->q[11] = state.motorState[RR_2].q;
 
   if (sensordata_->q.norm() >= 1.0) starting_configuration = sensordata_->q;
-  myUtils::pretty_print(sensordata_->q, std::cout, "Current q");
-  myUtils::pretty_print(starting_configuration, std::cout, "starting_q");
-  myUtils::pretty_print(final_configuration, std::cout, "final_q");
+  // myUtils::pretty_print(sensordata_->q, std::cout, "Current q");
+  // myUtils::pretty_print(starting_configuration, std::cout, "starting_q");
+  // myUtils::pretty_print(final_configuration, std::cout, "final_q");
   // current robot qdot
   sensordata_->qdot[0] = state.motorState[FL_0].dq;
   sensordata_->qdot[1] = state.motorState[FL_1].dq;
@@ -117,7 +117,12 @@ void A1LowDriver::extract_sensor_data() {
   sensordata_->jtrq[11] = state.motorState[RR_2].tauEst;
 
   // IMU Data (returns true when data received)
-  while(!imu_b) imu_->getData();
+  while(!imu_b) imu_b = imu_->getData();
+  // TODO: Handle the magnetic north offset
+  sensordata_->imu_rpy = imu_->raRPY;
+  sensordata_->imu_acc = imu_->raAcc;
+  sensordata_->imu_ang_vel = imu_->raGyro;
+
   // Gather foot force data
   for (int i=0; i<4; ++i) {
     sensordata_->foot_force[i] = state.footForce[i];
@@ -352,8 +357,8 @@ void A1LowDriver::RobotControl() {
   interface_->getCommand(sensordata_, command_);
 
   // Using the PnC Command compute PD vals and set q, qdot, Tau
-  // set_pd_command();
-  set_command();
+  set_pd_command();
+  // set_command();
 
   interface_->initial_config = starting_configuration;
   interface_->final_config = final_configuration;

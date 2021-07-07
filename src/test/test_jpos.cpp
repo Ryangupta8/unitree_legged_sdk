@@ -126,13 +126,7 @@ void Custom::RobotControl() {
     sensordata_->jtrq[9] = state.motorState[RR_0].tauEst;
     sensordata_->jtrq[10] = state.motorState[RR_1].tauEst;
     sensordata_->jtrq[11] = state.motorState[RR_2].tauEst;
-        // TODO: IMU Data
-        // TODO: Add some method to determine foot contact
-
-    // Call A1 Interface getCommand
-    // interface_->getCommand(sensordata_, command_);
-
-    // Send the command to the robot
+        // Send the command to the robot
     control.PowerProtect(cmd, state, 1);
 
     udp.SetSend(cmd);

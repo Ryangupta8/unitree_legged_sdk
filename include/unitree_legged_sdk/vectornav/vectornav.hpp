@@ -33,6 +33,12 @@ class Vectornav {
 
   bool getData();
 
+  // Structures for Holding IMU Data
+  Eigen::Vector3d raRPY;
+  Eigen::Vector3d raMag;
+  Eigen::Vector3d raAcc;
+  Eigen::Vector3d raGyro;
+
  protected:
 
   int checksum(char chrData [116]);
@@ -41,11 +47,7 @@ class Vectornav {
   char const DEVICE [13] = "/dev/ttyUSB0";
   int const BAUDRATE = 115200;
   double const TIMEOUT = 0.1;
-  // Structures for Holding IMU Data
-  Eigen::Vector3d raRPY;
-  Eigen::Vector3d raMag;
-  Eigen::Vector3d raAcc;
-  Eigen::Vector3d raGyro;
+  
   // Vars for receiving serial data
   int serial_port;
   // Create new termios struct, we call it 'tty' for convention
