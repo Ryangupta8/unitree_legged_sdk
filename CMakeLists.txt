@@ -39,8 +39,8 @@ set(CMAKE_CXX_FLAGS "-O3")
 # add_executable(test_pnc src/test_pnc.cpp)
 # target_link_libraries(test_pnc ${EXTRA_LIBS} ${PNC_LIBRARIES} ${RYAN_TEST_LIBRARY})
 
-add_executable(test_pd src/test/test_pd.cpp)
-target_link_libraries(test_pd ${EXTRA_LIBS} ${PNC_LIBRARIES} ${RYAN_TEST_LIBRARY})
+# add_executable(test_pd src/test/test_pd.cpp)
+# target_link_libraries(test_pd ${EXTRA_LIBS} ${PNC_LIBRARIES} ${RYAN_TEST_LIBRARY})
 
 add_executable(test_footforce src/test/test_footforce.cpp)
 target_link_libraries(test_footforce ${EXTRA_LIBS} ${PNC_LIBRARIES} ${RYAN_TEST_LIBRARY})

@@ -119,13 +119,13 @@ void A1LowDriver::extract_sensor_data() {
   // IMU Data (returns true when data received)
   while(!imu_b) imu_b = imu_->getData();
   // TODO: Handle the magnetic north offset
-  sensordata_->imu_rpy = imu_->raRPY;
+  /*sensordata_->imu_rpy = imu_->raRPY;
   sensordata_->imu_acc = imu_->raAcc;
-  sensordata_->imu_ang_vel = imu_->raGyro;
+  sensordata_->imu_ang_vel = imu_->raGyro;*/
 
   // Gather foot force data
   for (int i=0; i<4; ++i) {
-    sensordata_->foot_force[i] = state.footForce[i];
+    /*sensordata_->foot_force[i] = state.footForce[i];*/
     // sensordata_->foot_force[i] = state.footForceEst[i];
   }
 }
@@ -360,9 +360,9 @@ void A1LowDriver::RobotControl() {
   set_pd_command();
   // set_command();
 
-  interface_->initial_config = starting_configuration;
+  /* interface_->initial_config = starting_configuration;
   interface_->final_config = final_configuration;
-  interface_->jpos_step_des = jpos_des;
+  interface_->jpos_step_des = jpos_des;*/
 
   // Send the command to the robot
   control.PowerProtect(cmd, state, 1);

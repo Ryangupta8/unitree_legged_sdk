@@ -13,6 +13,9 @@ int main () {
       std::cout << "hello world" << std::endl;
     }*/ 
 
-    if(imu.getData()) std::cout << "Mingyo did it" << std::endl;
+    if(imu.getData()) {
+      std::cout << "IMU RPY = " << imu.raRPY[0] << ", " << imu.raRPY[1] << ", " << imu.raRPY[2] << std::endl;
+      std::cout << "IMU Ang Vel = " << imu.raGyro[0] << ", " << imu.raGyro[1] << ", " << imu.raGyro[2] << std::endl;
+    }
   }
 }
