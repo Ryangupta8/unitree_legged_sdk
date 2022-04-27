@@ -9,14 +9,9 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
-include_directories("/usr/local/include/PnC")
-include_directories(${PNC_INCLUDE_DIRS})
-
 link_directories("/usr/local/lib")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
-find_package(PnC REQUIRED)
-## End Ryan Added.
 
 include_directories(include)
 include_directories(include/unitree_legged_sdk/vectornav)
@@ -34,27 +29,6 @@ set(EXTRA_LIBS -pthread libunitree_legged_sdk_amd64.so lcm)
 set(EXTRA_LIBS ${EXTRA_LIBS} ${PNC_LIBRARIES} ${RYAN_TEST_LIBRARY})
 
 set(CMAKE_CXX_FLAGS "-O3")
-
-## Ryan exe
-# add_executable(test_pnc src/test_pnc.cpp)
-# target_link_libraries(test_pnc ${EXTRA_LIBS} ${PNC_LIBRARIES} ${RYAN_TEST_LIBRARY})
-
-# add_executable(test_pd src/test/test_pd.cpp)
-# target_link_libraries(test_pd ${EXTRA_LIBS} ${PNC_LIBRARIES} ${RYAN_TEST_LIBRARY})
-
-add_executable(test_footforce src/test/test_footforce.cpp)
-target_link_libraries(test_footforce ${EXTRA_LIBS} ${PNC_LIBRARIES} ${RYAN_TEST_LIBRARY})
-
-add_executable(test_vnav src/test/test_vnav.cpp src/vectornav/vectornav.cpp)
-target_link_libraries(test_vnav ${EXTRA_LIBS} ${PNC_LIBRARIES} ${RYAN_TEST_LIBRARY})
-
-add_executable(test_jpos src/test/test_jpos.cpp)
-target_link_libraries(test_jpos ${EXTRA_LIBS} ${PNC_LIBRARIES} ${RYAN_TEST_LIBRARY})
-
-add_executable(test_lowdriver src/test/test_lowdriver.cpp src/A1LowDriver.cpp src/vectornav/vectornav.cpp)
-target_link_libraries(test_lowdriver ${EXTRA_LIBS} ${PNC_LIBRARIES} ${RYAN_TEST_LIBRARY})
-
-## End Ryan exe
 
 
 # one pc one process
