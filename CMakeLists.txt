@@ -9,6 +9,9 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
+include_directories("/usr/local/include/PnC")
+include_directories(${PNC_INCLUDE_DIRS})
+
 link_directories("/usr/local/lib")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
@@ -21,7 +24,7 @@ link_directories(lib)
 
 add_compile_options(-std=c++11)
 
-set(EXTRA_LIBS -pthread libunitree_legged_sdk_amd64.so lcm)
+set(EXTRA_LIBS -pthread libunitree_legged_sdk_arm64.so lcm)
                # libA1PnC.so libmyFilters.so libmyMPC.so libmyRobotSystem.so
                # libmyPlanner.so libmyTrajectoryManager.so libmyUtils.so
                # libmyWBC.so libmyYaml.so)
